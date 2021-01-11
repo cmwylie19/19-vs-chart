@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nineteen-vs
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nineteen-vs
+  name: nineteen-vs
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: nineteen-vs
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nineteen-vs
+    spec:
+      containers:
+        - image: docker.io/cmwylie19/19-vs:latest
+          name: 19-vs
+          ports:
+            - containerPort: 8080
+              name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nineteen-vs
+  namespace: default
+  labels:
+    service: nineteen-vs
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+  selector:
+    app: nineteen-vs
